@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#17365d" />
+<meta name="description" content="Mini app pembelajaran mandiri Scam Ready: kenali modus scam, periksa bukti, lindungi data, dan bertindak aman." />
+<title>SCAM READY — Think Before You Click</title>
+<style>
+  :root{
+    --navy:#17365d; --navy2:#214a78; --teal:#16a6a1; --teal-dark:#087d79;
+    --yellow:#ffc857; --ink:#1c2938; --muted:#64748b; --bg:#f3f6fa;
+    --surface:#ffffff; --line:#e2e8f0; --soft:#eaf7f6; --red:#b42318;
+    --green:#16734a; --shadow:0 14px 36px rgba(22,45,75,.08); --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+  button,input,textarea,select{font:inherit}
+  button,a{ -webkit-tap-highlight-color:transparent }
+  a{color:var(--teal-dark);font-weight:700;text-decoration:none}
+  a:hover{text-decoration:underline}
+  button{cursor:pointer}
+  .app-shell{min-height:100vh}
+  .topbar{height:70px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 26px;gap:16px;position:sticky;top:0;z-index:20;box-shadow:0 4px 18px rgba(10,33,60,.12)}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .brand-mark{height:42px;width:42px;border-radius:14px;background:var(--yellow);display:grid;place-items:center;color:var(--navy);font-size:23px;flex:0 0 auto}
+  .brand-title{font-weight:900;letter-spacing:.055em;font-size:15px;line-height:1.15}
+  .brand-subtitle{color:#cfdae7;font-size:11px;margin-top:4px}
+  .top-actions{display:flex;align-items:center;gap:12px}
+  .top-progress{width:160px}
+  .progress-label{display:flex;justify-content:space-between;font-size:11px;color:#dae4ef;margin-bottom:5px;gap:8px}
+  .progress-track{height:7px;background:rgba(255,255,255,.18);border-radius:20px;overflow:hidden}
+  .progress-fill{height:100%;width:0;background:var(--yellow);border-radius:20px;transition:width .25s ease}
+  .icon-btn{border:1px solid rgba(255,255,255,.26);background:transparent;color:white;border-radius:11px;padding:8px 11px;font-weight:700;font-size:12px}
+  .layout{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1500px;margin:auto;min-height:calc(100vh - 70px)}
+  .sidebar{background:#fff;border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:70px;height:calc(100vh - 70px);overflow:auto}
+  .side-kicker{margin:4px 11px 10px;font-size:10px;color:#8794a7;letter-spacing:.12em;font-weight:900;text-transform:uppercase}
+  .nav-list{display:grid;gap:5px}
+  .nav-link{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:transparent;border-radius:12px;padding:10px 11px;color:#526176;font-size:12.5px;font-weight:700;transition:.18s}
+  .nav-link:hover{background:#f3f7fb;color:var(--navy)}
+  .nav-link.active{background:#eaf7f6;color:#076b68;box-shadow:inset 3px 0 0 var(--teal)}
+  .nav-num{width:27px;height:27px;display:grid;place-items:center;border-radius:9px;background:#edf1f6;color:#526176;font-size:11px;font-weight:900;flex:0 0 auto}
+  .nav-link.active .nav-num{background:var(--teal);color:white}
+  .nav-link.done .nav-num{background:#d9f2e4;color:#16734a}
+  .nav-label{flex:1}
+  .nav-tick{font-size:12px;color:var(--green)}
+  .side-card{margin:24px 5px 0;border-radius:15px;padding:15px;background:linear-gradient(145deg,#17365d,#24517f);color:#fff}
+  .side-card strong{display:block;font-size:13px;margin-bottom:5px}
+  .side-card p{font-size:11px;color:#d4e0ec;margin:0 0 11px}
+  .side-card button{width:100%;border:0;border-radius:10px;padding:9px 10px;background:var(--yellow);color:#17365d;font-weight:900;font-size:12px}
+  main{min-width:0;padding:32px clamp(16px,4vw,54px) 64px;max-width:1180px;width:100%;margin:0 auto}
+  .page{display:none;animation:fadein .25s ease}
+  .page.active{display:block}
+  @keyframes fadein{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-dark);font-weight:900;margin-bottom:10px}
+  h1,h2,h3,h4,p{margin-top:0}
+  h1{font-size:clamp(30px,4vw,52px);line-height:1.06;letter-spacing:-.04em;margin-bottom:18px;color:var(--navy)}
+  h2{color:var(--navy);font-size:clamp(24px,3vw,34px);letter-spacing:-.03em;line-height:1.15;margin-bottom:12px}
+  h3{color:var(--navy);font-size:19px;line-height:1.25;margin-bottom:9px}
+  h4{color:var(--navy);font-size:15px;margin-bottom:7px}
+  p{color:#536276}
+  .lead{font-size:16px;max-width:740px;color:#526176}
+  .hero{position:relative;overflow:hidden;border-radius:26px;padding:clamp(25px,5vw,54px);background:linear-gradient(125deg,#17365d 0%,#214f7d 63%,#137f80 100%);color:#fff;box-shadow:var(--shadow);margin-bottom:24px}
+  .hero:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(255,255,255,.12);right:-70px;top:-110px;box-shadow:0 0 0 38px rgba(255,255,255,.04),0 0 0 80px rgba(255,255,255,.025)}
+  .hero-content{position:relative;z-index:1;max-width:720px}
+  .hero .eyebrow{color:#9de8df}
+  .hero h1{color:white;max-width:690px}
+  .hero p{color:#d9e6f0;max-width:680px;font-size:15px}
+  .hero-kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);border-radius:100px;padding:7px 12px;font-size:11px;color:#fff;margin-bottom:19px;font-weight:800}
+  .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .btn{border:0;border-radius:12px;padding:11px 16px;font-size:13px;font-weight:850;display:inline-flex;justify-content:center;align-items:center;gap:7px;transition:transform .15s ease,filter .15s ease;text-align:center}
+  .btn:hover{transform:translateY(-1px);filter:brightness(.98)}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-yellow{background:var(--yellow);color:var(--navy)}
+  .btn-outline{background:#fff;border:1px solid var(--line);color:var(--navy)}
+  .btn-dark{background:var(--navy);color:white}
+  .btn-small{padding:8px 11px;font-size:12px;border-radius:10px}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:18px 0 30px}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+  .stat .stat-icon{font-size:22px;margin-bottom:9px}
+  .stat b{display:block;color:var(--navy);font-size:20px;line-height:1.2;margin-bottom:4px}
+  .stat span{font-size:12px;color:var(--muted)}
+  .section-head{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+  .section-title-wrap{max-width:760px}
+  .section-num{display:inline-grid;place-items:center;width:47px;height:47px;background:var(--yellow);color:var(--navy);border-radius:15px;font-weight:950;font-size:14px;margin-bottom:15px;box-shadow:0 7px 14px rgba(255,200,87,.18)}
+  .tag{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:100px;background:#e8f7f6;color:#087d79;font-size:10px;letter-spacing:.04em;text-transform:uppercase;font-weight:900}
+  .tag.orange{background:#fff2d7;color:#8b5900}.tag.purple{background:#f0eaff;color:#6941a5}.tag.red{background:#feeeee;color:#ac2727}
+  .card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:21px 0}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:21px;box-shadow:0 4px 17px rgba(22,45,75,.025)}
+  .card p:last-child{margin-bottom:0}
+  .card-icon{height:42px;width:42px;display:grid;place-items:center;background:#edf6fb;border-radius:13px;font-size:21px;margin-bottom:13px}
+  .card-icon.teal{background:#e5f7f4}.card-icon.yellow{background:#fff4d7}.card-icon.purple{background:#f0eaff}.card-icon.red{background:#fff0ee}
+  .callout{padding:17px 19px;border-radius:14px;background:#eaf7f6;border-left:4px solid var(--teal);margin:18px 0}
+  .callout.warning{background:#fff5df;border-color:#f0b32c}
+  .callout.danger{background:#fff0ee;border-color:#e66b5d}
+  .callout p{margin:0;font-size:13px}
+  .callout strong{color:var(--navy)}
+  .list-check{list-style:none;margin:10px 0;padding:0;display:grid;gap:10px}
+  .list-check li{position:relative;padding-left:29px;color:#536276;font-size:14px}
+  .list-check li:before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;display:grid;place-items:center;border-radius:7px;background:#e4f7ec;color:#15734a;font-size:12px;font-weight:950}
+  .number-list{counter-reset:step;list-style:none;padding:0;margin:14px 0;display:grid;gap:10px}
+  .number-list li{counter-increment:step;display:flex;gap:12px;align-items:flex-start;color:#536276;font-size:14px}
+  .number-list li:before{content:counter(step,decimal-leading-zero);font-size:11px;font-weight:950;color:var(--teal-dark);background:#e5f7f4;border-radius:9px;padding:5px 6px;min-width:30px;text-align:center}
+  .quote-message{background:#f7f9fc;border:1px dashed #c5d1df;padding:18px 20px;border-radius:15px;color:#37465a;font-weight:650;margin:16px 0}
+  .quote-message small{display:block;font-size:11px;color:#7a899b;font-weight:500;margin-top:10px}
+  .task-box{border:1px solid #bde7df;background:#f4fcfa;border-radius:17px;padding:20px;margin:20px 0}
+  .task-box h3{display:flex;align-items:center;gap:8px}
+  .field{display:grid;gap:7px;margin:13px 0}
+  .field label,.field-label{font-size:13px;font-weight:800;color:#34465c}
+  .field textarea,.field input[type=text],.field select{width:100%;background:white;border:1px solid #cbd5e1;border-radius:11px;padding:12px 13px;color:var(--ink);outline:none;transition:border .15s;min-height:44px}
+  .field textarea{min-height:105px;resize:vertical}
+  .field textarea:focus,.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(22,166,161,.12)}
+  .helper{font-size:11px;color:#7b8797}
+  .question-list{display:grid;gap:14px;margin:20px 0}
+  .question{background:white;border:1px solid var(--line);border-radius:16px;padding:19px}
+  .question.correct{border-color:#6cc89c;background:#f5fcf8}
+  .question.incorrect{border-color:#efa6a0;background:#fff9f8}
+  .q-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px;font-size:10px;font-weight:900;text-transform:uppercase;color:#8390a1;letter-spacing:.07em}
+  .q-title{font-weight:800;color:#263b53;margin-bottom:13px;font-size:14px}
+  .option-list{display:grid;gap:8px}
+  .option{display:flex;gap:10px;align-items:flex-start;background:#f8fafc;border:1px solid #e6ecf2;border-radius:11px;padding:10px 12px;font-size:13px;color:#48576b;cursor:pointer}
+  .option:hover{border-color:#91d6d0;background:#f5fcfb}
+  .option input{margin-top:3px;accent-color:var(--teal);flex:0 0 auto}
+  .feedback{font-size:12px;margin-top:12px;padding:10px 12px;border-radius:9px;display:none}
+  .feedback.show{display:block}.feedback.ok{background:#e5f7ed;color:#176b46}.feedback.no{background:#fff0ee;color:#a12e25}
+  .quiz-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0}
+  .result-panel{display:none;background:linear-gradient(135deg,#17365d,#126c70);color:white;border-radius:17px;padding:23px;margin:18px 0}
+  .result-panel.show{display:block}.result-score{font-size:42px;font-weight:950;letter-spacing:-.04em;line-height:1.1}.result-panel p{color:#dce9f1;font-size:13px;margin:8px 0 0}
+  .score-ring{width:88px;height:88px;border-radius:50%;border:6px solid rgba(255,255,255,.28);display:grid;place-items:center;font-weight:950;font-size:20px;flex:0 0 auto}
+  .score-layout{display:flex;align-items:center;gap:20px}
+  .step-footer{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--line);padding-top:19px;margin-top:30px}
+  .step-footer .done-btn{background:#e6f7ed;color:#176b46;border:1px solid #bee8ce}
+  .step-footer .done-btn.is-done{background:#176b46;color:#fff}
+  .step-hint{color:#8290a2;font-size:11px}
+  .tiny-note{font-size:11px;color:#7d899a}
+  .source-list{display:grid;gap:10px;margin-top:16px}
+  .source-item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px}
+  .source-icon{height:38px;width:38px;display:grid;place-items:center;background:#edf6fb;border-radius:12px;font-size:19px;flex:0 0 auto}
+  .source-item h4{margin:0 0 3px}.source-item p{font-size:12px;margin:0 0 7px}
+  .footer-note{border-top:1px solid var(--line);padding-top:22px;margin-top:34px;color:#8a97a7;font-size:11px}
+  .mobile-nav-toggle{display:none}
+  .toast{position:fixed;right:20px;bottom:20px;z-index:100;background:#17365d;color:#fff;padding:12px 17px;border-radius:12px;box-shadow:var(--shadow);font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s;max-width:calc(100vw - 40px)}
+  .toast.show{opacity:1;transform:none}
+  .pill-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:100px;background:#fff;border:1px solid var(--line);font-size:11px;color:#5a687a;font-weight:750}
+  .divider{height:1px;background:var(--line);margin:23px 0}
+  .mini-heading{font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#8592a3;margin:4px 0 12px}
+  .case-statements{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .case-statement{border:1px solid var(--line);border-radius:13px;padding:13px;background:#fff}
+  .case-statement b{display:block;font-size:13px;color:var(--navy);margin-bottom:4px}
+  .case-statement span{font-size:12px;color:#667588}
+  @media (max-width:1000px){.layout{grid-template-columns:220px minmax(0,1fr)}.sidebar{padding:19px 10px}.nav-link{font-size:11.5px;padding:9px}.top-progress{width:120px}}
+  @media (max-width:760px){.topbar{height:62px;padding:0 14px}.brand-mark{height:37px;width:37px}.brand-title{font-size:13px}.brand-subtitle{font-size:10px}.top-progress{display:none}.layout{display:block}.sidebar{display:none;position:fixed;z-index:30;top:62px;left:0;bottom:0;width:min(310px,88vw);height:auto;box-shadow:12px 0 35px rgba(15,35,58,.18);padding:18px;overflow:auto}.sidebar.open{display:block}.mobile-nav-toggle{display:inline-flex}.main-overlay{display:none;position:fixed;inset:62px 0 0;background:rgba(16,35,56,.4);z-index:25}.main-overlay.show{display:block}main{padding:22px 15px 45px}.hero{border-radius:21px}.stat-grid{gap:8px}.stat{padding:13px}.stat b{font-size:17px}.stat span{font-size:10px}.card-grid{grid-template-columns:1fr}.section-head{display:block}.section-num{margin-bottom:10px}.case-statements{grid-template-columns:1fr}.step-footer{align-items:flex-start}.score-layout{gap:14px}.score-ring{width:72px;height:72px}.question{padding:15px}}
+  @media (max-width:420px){.brand-subtitle{display:none}.top-actions{gap:6px}.icon-btn{padding:7px 9px;font-size:11px}.hero-actions .btn{width:100%}.stat-grid{grid-template-columns:1fr}.stat{display:flex;align-items:center;gap:13px}.stat .stat-icon{margin:0}.stat b{margin:0}.stat span{display:block}.score-layout{display:block}.score-ring{margin-bottom:12px}}
+  @media print{.topbar,.sidebar,.step-footer,.hero-actions,.quiz-actions,.mobile-nav-toggle{display:none!important}.layout{display:block}main{max-width:none;padding:0}.page{display:block!important;page-break-after:always}.hero{print-color-adjust:exact}.card,.question{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">🛡️</div>
+      <div>
+        <div class="brand-title">SCAM READY</div>
+        <div class="brand-subtitle">Think Before You Click • Digital Resilience Learning</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="top-progress" aria-label="Progres pembelajaran">
+        <div class="progress-label"><span>Progres belajar</span><strong id="progressTextTop">0%</strong></div>
+        <div class="progress-track"><div class="progress-fill" id="progressFillTop"></div></div>
+      </div>
+      <button class="icon-btn mobile-nav-toggle" id="menuToggle" aria-label="Buka menu">☰ Menu</button>
+      <button class="icon-btn" id="resetProgressBtn" title="Hapus progres di perangkat ini">↻ Reset</button>
+    </div>
+  </header>
+  <div class="main-overlay" id="mainOverlay"></div>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-kicker">Learning pathway</div>
+      <nav class="nav-list" id="navList" aria-label="Navigasi pembelajaran">
+        <button class="nav-link active" data-page="home"><span class="nav-num">⌂</span><span class="nav-label">Beranda</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="start"><span class="nav-num">01</span><span class="nav-label">Mulai dari Sini</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="understand"><span class="nav-num">02</span><span class="nav-label">Memahami Scam</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="modes"><span class="nav-num">03</span><span class="nav-label">Kenali Modus</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="detective"><span class="nav-num">04</span><span class="nav-label">Detektif Digital</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="stopcheck"><span class="nav-num">05</span><span class="nav-label">STOP–CHECK–VERIFY</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="lab"><span class="nav-num">06</span><span class="nav-label">Investigation Lab</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="victim"><span class="nav-num">07</span><span class="nav-label">Jika Menjadi Korban</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="finalquiz"><span class="nav-num">08</span><span class="nav-label">Final Challenge</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="reflect"><span class="nav-num">09</span><span class="nav-label">Refleksi & Aksi</span><span class="nav-tick"></span></button>
+        <button class="nav-link" data-page="resources"><span class="nav-num">↗</span><span class="nav-label">Sumber Resmi</span><span class="nav-tick"></span></button>
+      </nav>
+      <div class="side-card">
+        <strong>Ingat 3 langkah utama</strong>
+        <p>Jangan terburu-buru. Periksa buktinya. Verifikasi melalui kanal resmi.</p>
+        <button data-go="stopcheck">Pelajari langkah aman →</button>
+      </div>
+    </aside>
+    <main id="mainContent">
+      <!-- HOME -->
+      <section class="page active" id="page-home" data-index="0">
+        <div class="hero">
+          <div class="hero-content">
+            <div class="hero-kicker">🧭 PEMBELAJARAN MANDIRI • 75–90 MENIT</div>
+            <div class="eyebrow">Digital safety starts with you</div>
+            <h1>SCAM READY:<br>Think Before You Click</h1>
+            <p>Kenali modus penipuan digital, pelajari cara memeriksa tanda bahaya, berlatih mengambil keputusan yang aman, dan ketahui langkah yang perlu dilakukan jika terjadi insiden.</p>
+            <div class="hero-actions">
+              <button class="btn btn-yellow" data-go="start">Mulai Belajar <span>→</span></button>
+              <button class="btn btn-outline" data-go="understand">Lihat Materi</button>
+            </div>
+            <div class="pill-row"><span class="pill">🎯 Belajar mandiri</span><span class="pill">🧩 Studi kasus</span><span class="pill">✅ Kuis & refleksi</span></div>
+          </div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-icon">📚</div><div><b>10 Bagian</b><span>Alur belajar bertahap</span></div></div>
+          <div class="stat"><div class="stat-icon">🕒</div><div><b>75–90 Menit</b><span>Estimasi waktu belajar</span></div></div>
+          <div class="stat"><div class="stat-icon">🏁</div><div><b>100 Poin</b><span>Evaluasi dan refleksi</span></div></div>
+        </div>
+        <div class="section-head">
+          <div class="section-title-wrap"><div class="eyebrow">Learning outcomes</div><h2>Setelah belajar, Anda diharapkan mampu…</h2><p class="lead">Fokus pembelajaran bukan hanya menghafal istilah, tetapi mengambil tindakan aman berdasarkan bukti.</p></div>
+        </div>
+        <div class="card-grid">
+          <article class="card"><div class="card-icon">🔎</div><h3>Mengenali</h3><p>Mengidentifikasi ciri pesan, tautan, tawaran, atau permintaan yang berisiko.</p></article>
+          <article class="card"><div class="card-icon teal">🧠</div><h3>Menganalisis</h3><p>Menjelaskan alasan kecurigaan menggunakan bukti dan konteks, bukan sekadar perasaan.</p></article>
+          <article class="card"><div class="card-icon yellow">🛡️</div><h3>Melindungi</h3><p>Memilih tindakan aman untuk menjaga akun, data pribadi, dan transaksi.</p></article>
+          <article class="card"><div class="card-icon purple">📣</div><h3>Melapor</h3><p>Mengetahui cara menyimpan bukti dan mengakses kanal bantuan yang sesuai.</p></article>
+        </div>
+        <div class="callout"><p><strong>Prinsip belajar:</strong> berhenti sejenak sebelum bertindak. Scam sering memanfaatkan rasa takut, kepercayaan, rasa penasaran, atau keinginan mendapat keuntungan.</p></div>
+        <div class="card"><h3>Bagaimana menggunakan mini app ini?</h3><ol class="number-list"><li>Ikuti menu di sebelah kiri dari atas ke bawah.</li><li>Baca materi, lalu kerjakan aktivitas singkat pada setiap bagian.</li><li>Gunakan tombol “Tandai selesai” agar progres tersimpan di browser perangkat ini.</li><li>Selesaikan Final Challenge dan refleksi untuk memperoleh skor total.</li></ol><p class="tiny-note">Catatan: progres tersimpan secara lokal di browser yang digunakan. Data tidak dikirim ke penyelenggara pelatihan.</p></div>
+        <div class="step-footer"><span class="step-hint">Scam Education and Digital Resilience | © Agus Andira.</span><button class="btn btn-primary" data-go="start">Lanjut ke Bagian 01 →</button></div>
+      </section>
+
+      <!-- START -->
+      <section class="page" id="page-start" data-index="1">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">01</div><div class="eyebrow">Orientasi & diagnostik</div><h2>Mulai dari Sini</h2><p class="lead">Sebelum belajar lebih jauh, kenali kebiasaan digital dan pemahaman awal Anda. Tidak ada hukuman untuk jawaban yang belum tepat.</p></div><span class="tag">3–5 menit</span></div>
+        <div class="card-grid">
+          <article class="card"><div class="card-icon yellow">🎯</div><h3>Misi pembelajaran</h3><p>Belajar mengambil keputusan digital yang lebih aman dengan cara berhenti, memeriksa, dan memverifikasi.</p></article>
+          <article class="card"><div class="card-icon teal">🤝</div><h3>Kesepakatan belajar</h3><p>Jangan membagikan data pribadi saat latihan. Semua contoh kasus pada mini app ini adalah simulasi edukatif.</p></article>
+        </div>
+        <div class="task-box">
+          <h3>⚡ Cek pemahaman awal</h3><p>Pilih jawaban yang menurut Anda paling tepat. Gunakan hasil ini sebagai titik awal, bukan nilai akhir.</p>
+          <div class="question-list" id="diagnosticQuestions"></div>
+          <div class="quiz-actions"><button class="btn btn-primary" id="checkDiagnostic">Periksa Jawaban</button><button class="btn btn-outline" id="clearDiagnostic">Ulangi</button></div>
+          <div class="result-panel" id="diagnosticResult"></div>
+        </div>
+        <div class="callout warning"><p><strong>Ingat:</strong> siapa pun dapat menjadi sasaran scam. Menjadi korban bukan alasan untuk disalahkan. Kecepatan mencari bantuan dan mengamankan akun sangat penting.</p></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="home">← Beranda</button><button class="btn btn-primary" data-go="understand">Lanjut ke Bagian 02 →</button></div>
+      </section>
+
+      <!-- UNDERSTAND -->
+      <section class="page" id="page-understand" data-index="2">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">02</div><div class="eyebrow">Explore</div><h2>Memahami Scam</h2><p class="lead">Scam adalah upaya menipu atau memanipulasi seseorang agar menyerahkan uang, data, akses akun, atau melakukan tindakan yang merugikan.</p></div><span class="tag">8 menit</span></div>
+        <div class="card-grid">
+          <article class="card"><div class="card-icon red">🎭</div><h3>Manipulasi kepercayaan</h3><p>Pelaku menyamar sebagai orang, perusahaan, lembaga, atau pihak yang terlihat tepercaya.</p></article>
+          <article class="card"><div class="card-icon yellow">⏱️</div><h3>Tekanan waktu</h3><p>Korban didorong segera bertindak melalui ancaman, batas waktu, atau klaim hadiah yang akan hangus.</p></article>
+          <article class="card"><div class="card-icon purple">💸</div><h3>Iming-iming keuntungan</h3><p>Janji hadiah, pekerjaan, investasi, atau harga murah digunakan untuk menurunkan kewaspadaan.</p></article>
+          <article class="card"><div class="card-icon teal">🔐</div><h3>Pencurian akses atau data</h3><p>Pelaku mencoba mendapatkan kata sandi, OTP, PIN, data identitas, atau akses perangkat.</p></article>
+        </div>
+        <h3>Bagaimana scam memengaruhi keputusan?</h3>
+        <div class="case-statements"><div class="case-statement"><b>Takut</b><span>“Akun Anda akan diblokir jika tidak bertindak sekarang.”</span></div><div class="case-statement"><b>Serakah atau berharap</b><span>“Anda menang hadiah besar tanpa usaha.”</span></div><div class="case-statement"><b>Kepercayaan</b><span>“Saya petugas resmi. Ikuti instruksi saya.”</span></div><div class="case-statement"><b>Empati atau panik</b><span>“Saya keluarga Anda, saya sedang dalam keadaan darurat.”</span></div></div>
+        <div class="callout"><p><strong>Prinsip penting:</strong> pesan yang tampak resmi belum tentu asli. Periksa identitas dan konteksnya melalui kanal yang Anda akses sendiri, bukan melalui tautan atau nomor yang disediakan pengirim mencurigakan.</p></div>
+        <div class="task-box"><h3>💭 Refleksi cepat</h3><div class="field"><label for="emotionReflection">Teknik manipulasi mana yang paling mungkin memengaruhi keputusan seseorang? Mengapa?</label><textarea id="emotionReflection" placeholder="Tuliskan pemikiran Anda..."></textarea><span class="helper">Refleksi ini tersimpan di browser perangkat ini.</span></div><button class="btn btn-primary" id="saveEmotionReflection">Simpan Refleksi</button></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="start">← Sebelumnya</button><button class="btn btn-primary" data-go="modes">Lanjut ke Bagian 03 →</button></div>
+      </section>
+
+      <!-- MODES -->
+      <section class="page" id="page-modes" data-index="3">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">03</div><div class="eyebrow">Explore</div><h2>Kenali Berbagai Modus Scam</h2><p class="lead">Memahami pola umum membantu Anda mengajukan pertanyaan yang tepat ketika menerima pesan atau tawaran yang tidak biasa.</p></div><span class="tag">8 menit</span></div>
+        <div class="card-grid">
+          <article class="card"><div class="card-icon red">📩</div><h3>Phishing</h3><p>Pesan atau situs tiruan yang mencoba mencuri informasi login, data kartu, atau kode verifikasi.</p><div class="pill-row"><span class="pill">Tautan mencurigakan</span><span class="pill">Permintaan data</span></div></article>
+          <article class="card"><div class="card-icon yellow">🏦</div><h3>Impersonasi petugas</h3><p>Pelaku mengaku berasal dari bank, lembaga, kurir, atau layanan pelanggan untuk meminta tindakan sensitif.</p><div class="pill-row"><span class="pill">Identitas palsu</span><span class="pill">Tekanan waktu</span></div></article>
+          <article class="card"><div class="card-icon teal">🛍️</div><h3>Belanja daring palsu</h3><p>Penawaran tidak wajar, akun penjual palsu, pembayaran di luar sistem perlindungan, atau barang yang tak dikirim.</p><div class="pill-row"><span class="pill">Harga tidak wajar</span><span class="pill">Transfer langsung</span></div></article>
+          <article class="card"><div class="card-icon purple">💼</div><h3>Lowongan kerja palsu</h3><p>Janji penghasilan besar dengan proses yang tidak masuk akal atau meminta biaya dan data sensitif di awal.</p><div class="pill-row"><span class="pill">Biaya rekrutmen</span><span class="pill">Janji berlebihan</span></div></article>
+          <article class="card"><div class="card-icon yellow">📈</div><h3>Investasi fiktif</h3><p>Janji keuntungan pasti atau sangat tinggi, tekanan untuk segera menyetor, dan informasi izin yang sulit diverifikasi.</p><div class="pill-row"><span class="pill">Untung pasti</span><span class="pill">Risiko disamarkan</span></div></article>
+          <article class="card"><div class="card-icon">💌</div><h3>Penipuan hubungan sosial</h3><p>Pelaku membangun kedekatan lalu meminta uang, informasi, atau bantuan melalui keadaan darurat yang sulit diperiksa.</p><div class="pill-row"><span class="pill">Kedekatan cepat</span><span class="pill">Cerita darurat</span></div></article>
+        </div>
+        <div class="callout warning"><p><strong>Jangan menyimpulkan hanya dari satu tanda.</strong> Harga murah atau pesan mendesak tidak otomatis membuktikan penipuan. Gunakan beberapa bukti, cek konteks, dan verifikasi sumber secara independen.</p></div>
+        <div class="task-box"><h3>🧩 Tantangan mencocokkan</h3><div class="field"><label for="modeChallenge">Sebuah pesan meminta Anda membuka tautan dan memasukkan kata sandi karena akun akan dibekukan. Pola ini paling dekat dengan modus…</label><select id="modeChallenge"><option value="">Pilih jawaban</option><option value="phishing">Phishing</option><option value="shop">Penipuan belanja</option><option value="job">Lowongan kerja palsu</option><option value="investment">Investasi fiktif</option></select></div><button class="btn btn-primary" id="checkModeChallenge">Periksa Jawaban</button><div class="feedback" id="modeFeedback"></div></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="understand">← Sebelumnya</button><button class="btn btn-primary" data-go="detective">Lanjut ke Bagian 04 →</button></div>
+      </section>
+
+      <!-- DETECTIVE -->
+      <section class="page" id="page-detective" data-index="4">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">04</div><div class="eyebrow">Investigate</div><h2>Detektif Digital: Temukan Tanda Bahaya</h2><p class="lead">Tugas detektif bukan menebak, melainkan mencari bukti, membandingkan informasi, dan menentukan langkah yang aman.</p></div><span class="tag orange">10 menit</span></div>
+        <div class="quote-message">“SELAMAT! Anda mendapatkan hadiah eksklusif. Klaim dalam 10 menit. Untuk verifikasi, klik tautan berikut dan masukkan kode OTP Anda.”<small>Contoh pesan rekaan untuk latihan. Jangan gunakan tautan nyata atau masukkan data pribadi saat berlatih.</small></div>
+        <h3>Periksa tanda bahaya berikut</h3>
+        <div class="case-statements"><div class="case-statement"><b>⏱️ Tekanan waktu</b><span>Batas waktu dibuat agar penerima tidak sempat memeriksa.</span></div><div class="case-statement"><b>🎁 Hadiah yang tidak jelas</b><span>Pesan tidak memberi dasar yang dapat diverifikasi mengapa Anda menang.</span></div><div class="case-statement"><b>🔐 Meminta OTP</b><span>Kode verifikasi bersifat rahasia dan tidak boleh dibagikan.</span></div><div class="case-statement"><b>🔗 Tautan dari pengirim</b><span>Tautan dapat mengarah ke situs tiruan atau pengumpulan data.</span></div></div>
+        <div class="task-box"><h3>🔎 Tulis hasil investigasi</h3><div class="field"><label for="evidenceText">1. Sebutkan minimal tiga tanda bahaya dari pesan simulasi.</label><textarea id="evidenceText" placeholder="Contoh: tekanan waktu, meminta OTP, hadiah tidak jelas..."></textarea></div><div class="field"><label for="safeActionText">2. Apa tindakan paling aman dan bagaimana Anda memverifikasinya?</label><textarea id="safeActionText" placeholder="Tuliskan langkah aman dan alasan Anda..."></textarea></div><button class="btn btn-primary" id="saveInvestigation">Simpan Hasil Investigasi</button><span class="helper" id="investigationStatus" style="display:block;margin-top:9px"></span></div>
+        <div class="callout"><p><strong>Pesan kunci:</strong> jangan membagikan OTP, PIN, atau kata sandi. Buka aplikasi atau alamat resmi secara mandiri untuk memverifikasi pesan. Jangan menekan tautan yang membuat Anda ragu.</p></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="modes">← Sebelumnya</button><button class="btn btn-primary" data-go="stopcheck">Lanjut ke Bagian 05 →</button></div>
+      </section>
+
+      <!-- STOP CHECK VERIFY -->
+      <section class="page" id="page-stopcheck" data-index="5">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">05</div><div class="eyebrow">Action framework</div><h2>Strategi STOP–CHECK–VERIFY</h2><p class="lead">Gunakan tiga tahap ini setiap kali menerima pesan, tautan, permintaan data, atau tawaran yang terasa tidak wajar.</p></div><span class="tag">7 menit</span></div>
+        <div class="card-grid">
+          <article class="card"><div class="card-icon red">✋</div><h3>STOP — Berhenti</h3><p>Jangan panik atau terburu-buru. Jangan klik tautan, mengirim uang, mengunduh berkas, atau membagikan kode rahasia hanya karena diminta.</p><ul class="list-check"><li>Ambil jeda sebelum merespons.</li><li>Jangan membagikan OTP, PIN, atau kata sandi.</li><li>Hindari keputusan saat sedang takut atau tertekan.</li></ul></article>
+          <article class="card"><div class="card-icon yellow">🔎</div><h3>CHECK — Periksa</h3><p>Teliti pengirim, alamat situs, isi pesan, permintaan data, serta kewajaran tawaran dan konteksnya.</p><ul class="list-check"><li>Periksa alamat pengirim dan domain.</li><li>Cari tanda tekanan waktu atau janji berlebihan.</li><li>Periksa informasi melalui lebih dari satu sumber.</li></ul></article>
+          <article class="card"><div class="card-icon teal">✅</div><h3>VERIFY — Verifikasi</h3><p>Hubungi organisasi melalui aplikasi, situs, atau nomor resmi yang dicari secara mandiri.</p><ul class="list-check"><li>Jangan gunakan nomor yang diberikan pesan mencurigakan.</li><li>Periksa status layanan melalui kanal resminya.</li><li>Batalkan interaksi jika identitas tak dapat dipastikan.</li></ul></article>
+          <article class="card"><div class="card-icon purple">🧾</div><h3>PROTECT — Lindungi</h3><p>Jika terjadi insiden, amankan akun, simpan bukti, dan laporkan melalui jalur yang tepat.</p><ul class="list-check"><li>Ubah kata sandi yang terdampak dari perangkat aman.</li><li>Hubungi bank atau penyedia layanan bila transaksi terlibat.</li><li>Simpan percakapan, bukti transfer, dan waktu kejadian.</li></ul></article>
+        </div>
+        <div class="task-box"><h3>🎯 Pilih langkah yang tepat</h3><p>Anda menerima pesan yang mengaku berasal dari bank dan meminta kode OTP agar rekening tidak diblokir.</p><div class="field"><label for="safeChoice">Apa tindakan Anda?</label><select id="safeChoice"><option value="">Pilih tindakan</option><option value="send">Kirim OTP agar masalah cepat selesai</option><option value="reply">Balas pesan untuk meminta penjelasan</option><option value="verify">Jangan bagikan OTP; hentikan interaksi dan verifikasi melalui kanal resmi yang diakses sendiri</option><option value="forward">Teruskan pesan ke grup keluarga untuk ditanyakan</option></select></div><button class="btn btn-primary" id="checkSafeChoice">Periksa Pilihan</button><div class="feedback" id="safeChoiceFeedback"></div></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="detective">← Sebelumnya</button><button class="btn btn-primary" data-go="lab">Lanjut ke Bagian 06 →</button></div>
+      </section>
+
+      <!-- LAB -->
+      <section class="page" id="page-lab" data-index="6">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">06</div><div class="eyebrow">Scam Investigation Lab</div><h2>Laboratorium Investigasi Scam</h2><p class="lead">Terapkan cara berpikir detektif pada kasus simulasi. Nilai analisis kasus maksimal 30 poin.</p></div><span class="tag orange">10 menit</span></div>
+        <div class="quote-message"><strong>Kasus:</strong> Anda melihat iklan pekerjaan paruh waktu dengan bayaran sangat tinggi. Perekrut meminta biaya pendaftaran dan foto identitas sebelum menjelaskan nama perusahaan, deskripsi kerja, atau proses seleksi.<small>Kasus rekaan untuk pembelajaran. Jangan kirim dokumen identitas atau uang sungguhan.</small></div>
+        <div id="labQuestions" class="question-list"></div>
+        <div class="quiz-actions"><button class="btn btn-primary" id="checkLab">Nilai Analisis Kasus</button><button class="btn btn-outline" id="clearLab">Ulangi Jawaban</button></div>
+        <div class="result-panel" id="labResult"></div>
+        <div class="callout warning"><p><strong>Catatan:</strong> permintaan biaya di awal dan permintaan data sensitif tanpa proses transparan merupakan tanda bahaya yang perlu diverifikasi. Penilaian harus berdasarkan keseluruhan bukti, bukan satu indikator saja.</p></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="stopcheck">← Sebelumnya</button><button class="btn btn-primary" data-go="victim">Lanjut ke Bagian 07 →</button></div>
+      </section>
+
+      <!-- VICTIM -->
+      <section class="page" id="page-victim" data-index="7">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">07</div><div class="eyebrow">Incident response</div><h2>Jika Terlanjur Menjadi Korban</h2><p class="lead">Bertindak cepat dapat membantu mengurangi risiko lanjutan. Jangan menyalahkan diri sendiri atau orang yang menjadi korban.</p></div><span class="tag red">Panduan penting</span></div>
+        <div class="card-grid">
+          <article class="card"><div class="card-icon red">🏦</div><h3>Jika sudah transfer uang</h3><ul class="list-check"><li>Segera hubungi bank atau penyedia pembayaran melalui kanal resmi.</li><li>Laporkan melalui portal Indonesia Anti-Scam Centre (IASC).</li><li>Siapkan bukti transfer, detail rekening, waktu, dan percakapan.</li><li>Buat laporan kepada penegak hukum sesuai kebutuhan.</li></ul></article>
+          <article class="card"><div class="card-icon yellow">🔑</div><h3>Jika akun atau kata sandi terancam</h3><ul class="list-check"><li>Gunakan perangkat aman untuk mengganti kata sandi yang terdampak.</li><li>Aktifkan autentikasi multifaktor jika tersedia.</li><li>Keluar dari sesi atau perangkat asing dan periksa aktivitas akun.</li><li>Hubungi penyedia layanan melalui kanal resmi.</li></ul></article>
+          <article class="card"><div class="card-icon purple">📱</div><h3>Jika memasang aplikasi mencurigakan</h3><ul class="list-check"><li>Putuskan koneksi jika perangkat tampak dikendalikan pihak lain.</li><li>Gunakan perangkat lain yang aman untuk mengganti kredensial.</li><li>Hubungi penyedia layanan keuangan jika aplikasi memiliki akses sensitif.</li><li>Minta bantuan teknis tepercaya untuk memeriksa perangkat.</li></ul></article>
+          <article class="card"><div class="card-icon teal">🗂️</div><h3>Simpan bukti dengan aman</h3><ul class="list-check"><li>Simpan tangkapan layar percakapan dan profil pelaku.</li><li>Catat nomor, akun, tautan, waktu kejadian, dan detail transaksi.</li><li>Jangan menghapus bukti yang mungkin dibutuhkan dalam pelaporan.</li><li>Jangan membagikan bukti yang memuat data sensitif secara terbuka.</li></ul></article>
+        </div>
+        <div class="callout danger"><p><strong>Waspada penipuan lanjutan:</strong> setelah kejadian, pelaku lain dapat mengaku sebagai petugas pemulihan dana dan meminta biaya, OTP, atau akses perangkat. Verifikasi semua bantuan melalui kanal resmi.</p></div>
+        <div class="task-box"><h3>🧭 Buat rencana respons</h3><div class="field"><label for="incidentType">Skenario insiden</label><select id="incidentType"><option value="money">Saya sudah mentransfer uang</option><option value="account">Saya memberikan kata sandi atau kode rahasia</option><option value="install">Saya memasang aplikasi yang mencurigakan</option><option value="data">Saya menyerahkan data identitas</option></select></div><div class="field"><label for="incidentPlan">Tulis tiga tindakan awal yang akan Anda lakukan.</label><textarea id="incidentPlan" placeholder="1. Mengamankan akun...&#10;2. Menghubungi layanan resmi...&#10;3. Menyimpan bukti dan melapor..."></textarea></div><button class="btn btn-primary" id="saveIncidentPlan">Simpan Rencana</button><span class="helper" id="incidentPlanStatus" style="display:block;margin-top:9px"></span></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="lab">← Sebelumnya</button><button class="btn btn-primary" data-go="finalquiz">Lanjut ke Final Challenge →</button></div>
+      </section>
+
+      <!-- FINAL QUIZ -->
+      <section class="page" id="page-finalquiz" data-index="8">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">08</div><div class="eyebrow">Final challenge</div><h2>Uji Kesiapan Scam Ready Anda</h2><p class="lead">Jawab berdasarkan bukti dan tindakan aman. Setiap pertanyaan bernilai 5 poin, dengan skor maksimal 40 poin.</p></div><span class="tag purple">7–10 menit</span></div>
+        <div class="callout"><p><strong>Tips:</strong> pertimbangkan konteks, verifikasi identitas melalui kanal yang Anda akses sendiri, dan jangan bagikan kode rahasia atau akses akun.</p></div>
+        <div id="finalQuestions" class="question-list"></div>
+        <div class="quiz-actions"><button class="btn btn-primary" id="checkFinal">Periksa Kuis Akhir</button><button class="btn btn-outline" id="clearFinal">Ulangi Kuis</button><button class="btn btn-outline" id="goReflect">Lanjut ke Refleksi →</button></div>
+        <div class="result-panel" id="finalResult"></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="victim">← Sebelumnya</button><button class="btn btn-primary" data-go="reflect">Lanjut ke Bagian 09 →</button></div>
+      </section>
+
+      <!-- REFLECT -->
+      <section class="page" id="page-reflect" data-index="9">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">09</div><div class="eyebrow">Reflect & act</div><h2>Refleksi, Komitmen, dan Skor Akhir</h2><p class="lead">Pembelajaran dianggap bermakna ketika pengetahuan berubah menjadi kebiasaan. Isi refleksi untuk menyelesaikan evaluasi.</p></div><span class="tag">5 menit</span></div>
+        <div class="task-box">
+          <h3>✍️ Refleksi akhir</h3>
+          <div class="field"><label for="reflectLearn">1. Tanda bahaya apa yang sekarang paling mudah Anda kenali?</label><textarea id="reflectLearn" placeholder="Tuliskan hal yang Anda pelajari..." maxlength="1000"></textarea></div>
+          <div class="field"><label for="reflectChange">2. Apa yang akan Anda lakukan berbeda ketika menerima pesan mendesak atau tawaran yang terlalu bagus?</label><textarea id="reflectChange" placeholder="Tuliskan perubahan perilaku yang akan Anda lakukan..." maxlength="1000"></textarea></div>
+          <div class="field"><label for="reflectCommit">3. Tuliskan satu komitmen keamanan digital yang akan Anda praktikkan.</label><textarea id="reflectCommit" placeholder="Contoh: Saya akan memverifikasi pengirim melalui kanal resmi sebelum bertransaksi..." maxlength="1000"></textarea></div>
+          <div class="field"><label for="reflectAction">Pilih kebiasaan yang akan mulai Anda lakukan.</label><select id="reflectAction"><option value="">Pilih komitmen</option><option value="verify">Memverifikasi pesan melalui kanal resmi</option><option value="otp">Tidak membagikan OTP, PIN, atau kata sandi</option><option value="link">Memeriksa tautan sebelum membuka</option><option value="family">Membantu keluarga mengenali tanda bahaya</option><option value="report">Menyimpan bukti dan melapor jika terjadi insiden</option></select></div>
+          <div class="quiz-actions"><button class="btn btn-primary" id="saveReflection">Simpan Refleksi</button><button class="btn btn-outline" id="clearReflection">Kosongkan Isian</button></div>
+          <span class="helper" id="reflectionStatus"></span>
+        </div>
+        <div class="card"><div class="eyebrow">Assessment summary</div><h3>Perhitungan skor akhir</h3><p class="tiny-note">Total 100 poin: kuis pengetahuan 40, analisis kasus 30, simulasi keputusan aman 20, dan refleksi 10. Bagian yang belum dikerjakan bernilai 0 hingga Anda menyelesaikannya.</p>
+          <div class="score-breakdown" id="scoreBreakdown"></div>
+          <div class="quiz-actions"><button class="btn btn-primary" id="calculateTotal">Hitung Skor Akhir</button><button class="btn btn-outline" id="printSummary">Cetak / Simpan PDF</button></div>
+          <div class="result-panel" id="totalResult"></div>
+        </div>
+        <div class="callout"><p><strong>Perlu diingat:</strong> skor adalah indikator latihan belajar, bukan jaminan bahwa seseorang selalu dapat mendeteksi semua scam. Verifikasi tetap penting karena modus penipuan terus berubah.</p></div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="finalquiz">← Kembali ke Kuis</button><button class="btn btn-primary" data-go="resources">Lihat Sumber Resmi →</button></div>
+      </section>
+
+      <!-- SOURCES -->
+      <section class="page" id="page-resources" data-index="10">
+        <div class="section-head"><div class="section-title-wrap"><div class="section-num">↗</div><div class="eyebrow">Continue learning</div><h2>Sumber Edukasi & Pelaporan Resmi</h2><p class="lead">Gunakan sumber berikut untuk memperdalam materi dan mencari bantuan ketika menghadapi indikasi penipuan.</p></div><span class="tag">Sumber bantuan</span></div>
+        <div class="source-list">
+          <div class="source-item"><div class="source-icon">📘</div><div><h4>Otoritas Jasa Keuangan (OJK)</h4><p>Booklet “Waspada Penipuan (Scam) Mengintai Kita, Ayo Lawan dan Hindari!” untuk mengenali modus, melakukan pencegahan, dan mengetahui langkah jika menjadi korban.</p><a href="https://ojk.go.id/id/berita-dan-kegiatan/info-terkini/Pages/Booklet-Waspada-Penipuan-Scam-OJK.aspx" target="_blank" rel="noopener noreferrer">Buka booklet resmi OJK ↗</a></div></div>
+          <div class="source-item"><div class="source-icon">🧾</div><div><h4>Indonesia Anti-Scam Centre (IASC)</h4><p>Portal penanganan penipuan transaksi keuangan. Siapkan bukti transfer, rincian rekening, serta bukti percakapan. Korban juga perlu mempertimbangkan laporan kepada penegak hukum.</p><a href="https://iasc.ojk.go.id/" target="_blank" rel="noopener noreferrer">Buka portal IASC ↗</a></div></div>
+          <div class="source-item"><div class="source-icon">🔍</div><div><h4>CekRekening.id</h4><p>Layanan untuk memeriksa atau melaporkan rekening yang diindikasikan terkait penipuan. Hasil pemeriksaan bukan jaminan mutlak bahwa rekening aman atau tidak aman.</p><a href="https://cekrekening.id/" target="_blank" rel="noopener noreferrer">Buka CekRekening.id ↗</a></div></div>
+        </div>
+        <div class="callout danger"><p><strong>Jika baru saja tertipu:</strong> segera hubungi bank atau penyedia pembayaran melalui kontak resmi, amankan akun, simpan bukti, lalu gunakan kanal pelaporan yang sesuai. Jangan percaya pihak yang menjanjikan pemulihan dana dengan meminta biaya, OTP, atau akses perangkat.</p></div>
+        <div class="card"><h3>Checklist pribadi sebelum menutup pembelajaran</h3><div id="finalChecklist" class="checklist"></div><p class="tiny-note">Checklist ini tersimpan di browser perangkat ini.</p></div>
+        <div class="hero" style="margin-top:24px;padding:30px">
+          <div class="hero-content"><div class="eyebrow">Your next safe action</div><h2 style="color:#fff">Kenali Modusnya. Verifikasi Faktanya. Lindungi Dirimu.</h2><p>Jadikan kebiasaan untuk berhenti sejenak, memeriksa bukti, dan melakukan verifikasi melalui kanal resmi sebelum mengambil keputusan digital.</p><div class="hero-actions"><button class="btn btn-yellow" data-go="home">Kembali ke Beranda</button><button class="btn btn-outline" id="exportSummary">Ekspor Refleksi (.txt)</button></div></div>
+        </div>
+        <div class="footer-note">SCAM READY: Think Before You Click • Materi edukasi ini bukan pengganti nasihat resmi dari bank, penyedia layanan, otoritas, atau penegak hukum. Periksa kembali informasi dan kanal kontak melalui sumber resmi.</div>
+        <div class="step-footer"><button class="btn btn-outline" data-go="reflect">← Refleksi</button><button class="btn btn-primary" data-go="home">Selesai • Kembali ke Beranda</button></div>
+      </section>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  'use strict';
+  const STORAGE_KEY = 'scamReadyMicrositeV1';
+  const pageOrder = ['home','start','understand','modes','detective','stopcheck','lab','victim','finalquiz','reflect','resources'];
+  const pageNames = {home:'Beranda',start:'Mulai dari Sini',understand:'Memahami Scam',modes:'Kenali Modus',detective:'Detektif Digital',stopcheck:'STOP–CHECK–VERIFY',lab:'Investigation Lab',victim:'Jika Menjadi Korban',finalquiz:'Final Challenge',reflect:'Refleksi & Aksi',resources:'Sumber Resmi'};
+  const defaultState = {completed:[], quizAnswers:{}, scores:{diagnostic:null,lab:null,simulation:null,finalquiz:null,reflection:null,total:null}, fields:{}, checklist:[]};
+  let state = loadState();
+  let activePage = 'home';
+  let toastTimer;
+  const $ = (id) => document.getElementById(id);
+  const escapeHTML = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function loadState(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');return {...structuredClone(defaultState),...saved,completed:saved.completed||[],quizAnswers:saved.quizAnswers||{},scores:{...defaultState.scores,...(saved.scores||{})},fields:saved.fields||{},checklist:saved.checklist||[]};}catch(e){return JSON.parse(JSON.stringify(defaultState));}}
+  function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){showToast('Browser tidak dapat menyimpan progres secara lokal.');}}
+  function showToast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2800);}
+  function setField(id,value){state.fields[id]=value;saveState();}
+  function restoreFields(){Object.entries(state.fields).forEach(([id,val])=>{const el=$(id);if(el){if(el.type==='checkbox')el.checked=!!val;else el.value=val;}});}
+  function go(page){if(!pageOrder.includes(page))return;activePage=page;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));document.querySelectorAll('.nav-link').forEach(n=>{n.classList.toggle('active',n.dataset.page===page);n.classList.toggle('done',state.completed.includes(n.dataset.page));const tick=n.querySelector('.nav-tick');if(tick)tick.textContent=state.completed.includes(n.dataset.page)?'✓':'';});$('sidebar').classList.remove('open');$('mainOverlay').classList.remove('show');window.scrollTo({top:0,behavior:'smooth'});renderProgress();if(page==='reflect')renderBreakdown();}
+  function renderProgress(){const total=pageOrder.filter(p=>p!=='home').length;const n=state.completed.filter(p=>p!=='home').length;const pct=Math.round(n/total*100);$('progressTextTop').textContent=pct+'%';$('progressFillTop').style.width=pct+'%';document.querySelectorAll('.nav-link').forEach(nv=>{nv.classList.toggle('done',state.completed.includes(nv.dataset.page));const tick=nv.querySelector('.nav-tick');if(tick)tick.textContent=state.completed.includes(nv.dataset.page)?'✓':'';});}
+  function markComplete(){if(activePage==='home'){go('start');return;}if(!state.completed.includes(activePage))state.completed.push(activePage);saveState();renderProgress();showToast('Bagian "'+pageNames[activePage]+'" ditandai selesai.');}
+  document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.page)));
+  document.addEventListener('click',e=>{const target=e.target.closest('[data-go]');if(target)go(target.dataset.go);});
+  $('menuToggle').addEventListener('click',()=>{$('sidebar').classList.toggle('open');$('mainOverlay').classList.toggle('show');});
+  $('mainOverlay').addEventListener('click',()=>{$('sidebar').classList.remove('open');$('mainOverlay').classList.remove('show');});
+  $('resetProgressBtn').addEventListener('click',()=>{if(confirm('Hapus semua progres, jawaban kuis, dan refleksi yang tersimpan di browser ini?')){localStorage.removeItem(STORAGE_KEY);state=JSON.parse(JSON.stringify(defaultState));document.querySelectorAll('textarea,input[type=text]').forEach(el=>el.value='');document.querySelectorAll('select').forEach(el=>el.selectedIndex=0);document.querySelectorAll('input[type=radio],input[type=checkbox]').forEach(el=>el.checked=false);document.querySelectorAll('.question').forEach(el=>el.classList.remove('correct','incorrect'));document.querySelectorAll('.result-panel').forEach(el=>{el.classList.remove('show');el.innerHTML='';});document.querySelectorAll('.feedback').forEach(el=>{el.className='feedback';el.textContent='';});renderProgress();renderBreakdown();renderFinalChecklist();go('home');showToast('Progres berhasil direset pada perangkat ini.');}});
+  document.querySelectorAll('.page').forEach(page=>{if(page.id==='page-home')return;const footer=page.querySelector('.step-footer');if(footer){const btn=document.createElement('button');btn.className='btn done-btn';btn.textContent='✓ Tandai selesai';btn.addEventListener('click',markComplete);footer.insertBefore(btn,footer.children[1]||null);}});
+
+  // Question renderer: correct answer IDs are only used locally to give learning feedback.
+  const diagnosticData=[
+    {q:'Kode OTP yang dikirim untuk verifikasi akun sebaiknya…',options:['Diberikan kepada petugas yang menelepon','Dirahasiakan dan tidak dibagikan','Dikirim ke grup keluarga'],correct:1,explain:'OTP adalah kode verifikasi rahasia. Jangan membagikannya kepada siapa pun.'},
+    {q:'Pesan yang mendesak Anda bertindak cepat berarti…',options:['Pasti scam','Pasti resmi karena ada batas waktu','Perlu diperiksa bersama indikator lain'],correct:2,explain:'Tekanan waktu adalah tanda risiko, tetapi tetap perlu dilihat bersama bukti lain.'},
+    {q:'Untuk memverifikasi pesan dari bank, sebaiknya…',options:['Klik tautan pada pesan','Gunakan aplikasi atau kanal resmi yang diakses sendiri','Balas dengan mengirim data identitas'],correct:1,explain:'Akses kanal resmi secara mandiri, jangan mengandalkan tautan atau nomor dari pesan mencurigakan.'}
+  ];
+  const labData=[
+    {q:'Tanda bahaya paling jelas pada kasus lowongan kerja ini adalah…',options:['Pekerjaan paruh waktu','Meminta biaya dan identitas sebelum informasi perusahaan jelas','Menggunakan komunikasi digital'],correct:1,explain:'Biaya awal dan permintaan data sensitif tanpa proses transparan perlu dicurigai dan diverifikasi.'},
+    {q:'Apa yang sebaiknya dilakukan sebelum menyerahkan dokumen identitas?',options:['Mengirim agar proses cepat','Memastikan perusahaan dan proses rekrutmen melalui sumber tepercaya','Mengirim ke kontak yang menghubungi lebih dulu'],correct:1,explain:'Verifikasi identitas perusahaan dan kebutuhan data melalui kanal independen.'},
+    {q:'Informasi tambahan apa yang paling relevan untuk diperiksa?',options:['Nama resmi perusahaan, situs, alamat, dan deskripsi pekerjaan','Warna logo pada iklan saja','Jumlah emoji pada pesan'],correct:0,explain:'Periksa identitas organisasi dan detail pekerjaan dengan sumber yang dapat diverifikasi.'},
+    {q:'Jika perekrut tetap menekan dan menolak diverifikasi, langkah aman adalah…',options:['Membayar biaya agar tidak kehilangan kesempatan','Menghentikan interaksi dan tidak mengirim uang atau data','Meminjam uang untuk biaya pendaftaran'],correct:1,explain:'Jangan lanjutkan transaksi atau serahkan data saat identitas dan proses tidak jelas.'},
+    {q:'Mengapa janji bayaran sangat tinggi perlu diperiksa?',options:['Karena semua pekerjaan bergaji tinggi adalah scam','Karena janji yang tidak wajar dapat menjadi teknik menarik korban','Karena pekerjaan daring selalu berbahaya'],correct:1,explain:'Janji berlebihan adalah indikator yang perlu diperiksa bersama bukti lain.'},
+    {q:'Jika menemukan indikasi penipuan, bukti yang bermanfaat disimpan adalah…',options:['Percakapan, profil pengirim, detail tawaran, dan bukti transaksi jika ada','Hanya nama panggilan perekrut','Tidak perlu menyimpan apa pun'],correct:0,explain:'Bukti yang relevan membantu proses verifikasi, pengaduan, atau pelaporan.'}
+  ];
+  const simulationData=[
+    {q:'Seseorang yang mengaku petugas meminta OTP untuk “membatalkan transaksi”.',options:['Berikan OTP supaya transaksi dibatalkan','Jangan berikan OTP; tutup interaksi dan hubungi bank lewat kanal resmi','Kirimkan kode ke teman agar diperiksa'],correct:1,explain:'Jangan membagikan OTP. Verifikasi permintaan melalui kanal resmi yang diakses sendiri.'},
+    {q:'Toko memberi diskon besar tetapi meminta transfer di luar platform.',options:['Langsung transfer agar diskon tidak hilang','Periksa reputasi dan perlindungan transaksi; gunakan kanal pembayaran tepercaya','Kirim foto kartu identitas sebagai jaminan'],correct:1,explain:'Pahami risiko dan perlindungan pembayaran. Jangan tergesa-gesa menyetujui transaksi di luar sistem.'},
+    {q:'Anda sudah mengeklik tautan dan memasukkan kata sandi.',options:['Diamkan karena belum tentu terjadi apa-apa','Dari perangkat aman, ganti kata sandi terdampak, amankan akun, dan hubungi layanan terkait','Bagikan tautan ke teman untuk dicoba'],correct:1,explain:'Ambil langkah mitigasi secepatnya. Periksa aktivitas akun dan gunakan bantuan resmi.'},
+    {q:'Teman menjadi korban dan merasa malu.',options:['Menyalahkan karena kurang hati-hati','Mendukungnya, mengamankan akun/transaksi, menyimpan bukti, dan melapor','Mengunggah seluruh data korban di media sosial'],correct:1,explain:'Dukung korban tanpa menyalahkan, lindungi privasi, dan bantu mengakses jalur bantuan.'}
+  ];
+  const finalData=[
+    {q:'Anda menerima pesan yang mengaku dari bank dan meminta kode OTP. Apa tindakan terbaik?',options:['Memberikan OTP karena pesan terlihat resmi','Membalas pesan dengan nomor rekening','Tidak membagikan OTP dan memverifikasi lewat kanal resmi','Meneruskan pesan ke banyak orang'],correct:2,explain:'OTP adalah rahasia. Hentikan interaksi mencurigakan dan verifikasi melalui kanal resmi.'},
+    {q:'Toko daring menawarkan harga jauh di bawah pasaran dan meminta transfer langsung ke rekening pribadi. Apa langkah paling tepat?',options:['Segera transfer agar tidak kehabisan','Periksa reputasi, detail transaksi, dan perlindungan pembayaran sebelum memutuskan','Percaya karena logonya profesional','Kirim foto identitas agar pesanan diproses'],correct:1,explain:'Periksa beberapa indikator dan pastikan transaksi memiliki perlindungan yang memadai.'},
+    {q:'Pesan yang mendesak Anda bertindak dalam lima menit selalu merupakan scam. Benar atau salah?',options:['Benar, semua pesan mendesak pasti scam','Salah, tekanan waktu adalah indikator risiko yang perlu dinilai bersama bukti lain','Benar, jika memakai tanda seru','Salah, pesan mendesak selalu resmi'],correct:1,explain:'Tekanan waktu patut diwaspadai tetapi bukan bukti tunggal. Verifikasi konteks dan pengirim.'},
+    {q:'Jika Anda sudah mentransfer uang kepada pelaku penipuan, apa langkah awal yang tepat?',options:['Menunggu beberapa hari','Menghapus semua percakapan','Segera hubungi bank/penyedia pembayaran, simpan bukti, dan laporkan melalui jalur resmi','Membayar pihak yang menjanjikan dana kembali'],correct:2,explain:'Hubungi penyedia layanan segera, simpan bukti, dan gunakan kanal pelaporan yang sesuai.'},
+    {q:'Mengapa sebaiknya tidak menggunakan nomor kontak yang ada di pesan mencurigakan untuk verifikasi?',options:['Nomor telepon tidak pernah dapat dipercaya','Nomor tersebut bisa dikendalikan pelaku, sehingga sebaiknya mencari kontak resmi secara mandiri','Karena seluruh nomor layanan pelanggan palsu','Agar pesan tidak terbaca'],correct:1,explain:'Cari sendiri kontak pada situs atau aplikasi resmi, bukan dari pesan yang sedang dicurigai.'},
+    {q:'Apa yang harus dilakukan ketika mendapat tautan login yang terlihat mirip dengan situs resmi?',options:['Masukkan kata sandi percobaan','Buka melalui tautan agar tahu isinya','Jangan masukkan data; akses situs resmi secara mandiri dan periksa alamat domain','Teruskan tautan ke teman untuk diuji'],correct:2,explain:'Hindari memasukkan data di tautan yang meragukan. Kunjungi situs resmi secara mandiri.'},
+    {q:'Sebuah investasi menjanjikan keuntungan besar tanpa risiko dan mendesak Anda menyetor hari ini. Apa tindakan terbaik?',options:['Setor sedikit dulu','Periksa legalitas dan risiko melalui sumber resmi; jangan tergesa-gesa','Percaya jika ada testimoni','Pinjam uang agar tidak tertinggal'],correct:1,explain:'Janji keuntungan pasti dan tekanan menyetor adalah tanda bahaya. Verifikasi legalitas serta risiko.'},
+    {q:'Apa respons yang tepat saat anggota keluarga menjadi korban scam?',options:['Menyalahkannya agar jera','Meminta korban mengumumkan semua data di media sosial','Mendukung tanpa menyalahkan, mengamankan akun/transaksi, menyimpan bukti, dan mencari bantuan resmi','Menghubungi pelaku untuk mengancamnya'],correct:2,explain:'Utamakan keselamatan, dukungan, bukti, dan jalur bantuan resmi. Lindungi data korban.'}
+  ];
+  function renderQuiz(containerId,group,data){const container=$(containerId);container.innerHTML='';data.forEach((item,i)=>{const div=document.createElement('div');div.className='question';div.id=group+'Q'+i;const saved=state.quizAnswers[group+'_'+i];div.innerHTML='<div class="q-meta"><span>Pertanyaan '+(i+1)+' dari '+data.length+'</span><span>5 poin</span></div><div class="q-title">'+escapeHTML(item.q)+'</div><div class="option-list">'+item.options.map((op,j)=>'<label class="option"><input type="radio" name="'+group+'_'+i+'" value="'+j+'" '+(String(saved)===String(j)?'checked':'')+'><span>'+escapeHTML(op)+'</span></label>').join('')+'</div><div class="feedback" id="'+group+'Feedback'+i+'"></div>';container.appendChild(div);});container.addEventListener('change',e=>{if(e.target.matches('input[type=radio]')){state.quizAnswers[e.target.name]=Number(e.target.value);delete state.scores[group];state.scores.total=null;saveState();renderBreakdown();}});}
+  function evaluateQuiz(group,data,resultId,scoreName,maxPoints,showDetailed){let raw=0,answered=0;data.forEach((item,i)=>{const val=state.quizAnswers[group+'_'+i];const box=$(group+'Q'+i);const feedback=$(group+'Feedback'+i);const has=val!==undefined&&val!==null&&val!=='';if(has)answered++;const ok=Number(val)===item.correct;if(ok)raw+=5;box.classList.toggle('correct',has&&ok);box.classList.toggle('incorrect',has&&!ok);feedback.className='feedback show '+(ok?'ok':'no');feedback.textContent=(ok?'✓ Tepat. ':'✕ Belum tepat. ')+item.explain;});const result=$(resultId);result.classList.add('show');const pct=Math.round(raw/maxPoints*100);const headline=raw>=maxPoints*.8?'Bagus! Pemahaman Anda sudah kuat.':raw>=maxPoints*.6?'Cukup baik. Tinjau kembali jawaban yang belum tepat.':'Terus berlatih. Pelajari kembali materi yang berkaitan dengan jawaban Anda.';result.innerHTML='<div class="score-layout"><div class="score-ring">'+raw+'/'+maxPoints+'</div><div><div style="font-size:17px;font-weight:900">'+headline+'</div><p>Jawaban terisi: '+answered+' dari '+data.length+'. Skor bagian ini: '+raw+' poin dari '+maxPoints+'.</p></div></div>';state.scores[scoreName]=raw;state.scores.total=null;saveState();renderBreakdown();showToast('Skor tersimpan: '+raw+'/'+maxPoints+' poin.');return raw;}
+  renderQuiz('diagnosticQuestions','diagnostic',diagnosticData);
+  renderQuiz('labQuestions','lab',labData);
+  renderQuiz('finalQuestions','finalquiz',finalData);
+  // Simulation is evaluated through STOP–CHECK–VERIFY decision plus the 4 scenario questions.
+  const simulationHost=document.createElement('div');simulationHost.id='simulationQuestions';simulationHost.className='question-list';
+  const simulationCard=document.createElement('div');simulationCard.className='card';simulationCard.style.margin='20px 0';simulationCard.innerHTML='<div class="eyebrow">Decision simulation • 20 poin</div><h3>Simulasi Keputusan Aman</h3><p class="tiny-note">Empat situasi berikut menilai tindakan yang Anda pilih. Nilai maksimal 20 poin.</p>';
+  simulationCard.appendChild(simulationHost);
+  const labFooter=$('page-lab').querySelector('.callout');
+  $('page-stopcheck').insertBefore(simulationCard,$('page-stopcheck').querySelector('.step-footer'));
+  renderQuiz('simulationQuestions','simulation',simulationData);
+  const simBtn=document.createElement('button');simBtn.className='btn btn-primary';simBtn.id='checkSimulation';simBtn.textContent='Nilai Simulasi';simulationCard.appendChild(simBtn);
+  const simResult=document.createElement('div');simResult.className='result-panel';simResult.id='simulationResult';simulationCard.appendChild(simResult);
+  simBtn.addEventListener('click',()=>evaluateQuiz('simulation',simulationData,'simulationResult','simulation',20,true));
+
+  $('checkDiagnostic').addEventListener('click',()=>{evaluateQuiz('diagnostic',diagnosticData,'diagnosticResult','diagnostic',15,true);showToast('Diagnostik selesai. Nilai ini tidak masuk skor akhir.');});
+  $('clearDiagnostic').addEventListener('click',()=>clearGroup('diagnostic',diagnosticData,'diagnosticResult','diagnostic'));
+  $('checkLab').addEventListener('click',()=>evaluateQuiz('lab',labData,'labResult','lab',30,true));
+  $('clearLab').addEventListener('click',()=>clearGroup('lab',labData,'labResult','lab'));
+  $('checkFinal').addEventListener('click',()=>evaluateQuiz('finalquiz',finalData,'finalResult','finalquiz',40,true));
+  $('clearFinal').addEventListener('click',()=>clearGroup('finalquiz',finalData,'finalResult','finalquiz'));
+  $('goReflect').addEventListener('click',()=>go('reflect'));
+  function clearGroup(group,data,resultId,scoreName){data.forEach((_,i)=>{delete state.quizAnswers[group+'_'+i];const el=$(group+'Q'+i);if(el){el.classList.remove('correct','incorrect');el.querySelectorAll('input').forEach(r=>r.checked=false);const f=$(group+'Feedback'+i);if(f){f.className='feedback';f.textContent='';}}});delete state.scores[scoreName];state.scores.total=null;const r=$(resultId);r.classList.remove('show');r.innerHTML='';saveState();renderBreakdown();showToast('Jawaban bagian ini telah dikosongkan.');}
+
+  // Small formative activities and local note storage.
+  $('checkModeChallenge').addEventListener('click',()=>{const correct=$('modeChallenge').value==='phishing';const f=$('modeFeedback');f.className='feedback show '+(correct?'ok':'no');f.textContent=correct?'✓ Tepat. Pesan yang mengarahkan ke tautan login untuk mencuri kata sandi memiliki pola phishing.':'Belum tepat. Fokus pada tautan yang meminta kata sandi atau data login: ini paling dekat dengan phishing.';});
+  $('checkSafeChoice').addEventListener('click',()=>{const correct=$('safeChoice').value==='verify';const f=$('safeChoiceFeedback');f.className='feedback show '+(correct?'ok':'no');f.textContent=correct?'✓ Benar. Jangan bagikan OTP. Hentikan interaksi dan verifikasi melalui kanal resmi yang diakses sendiri.':'Pilihan ini belum aman. OTP tidak boleh dibagikan; lakukan verifikasi secara mandiri melalui kanal resmi.';});
+  $('saveEmotionReflection').addEventListener('click',()=>{setField('emotionReflection',$('emotionReflection').value);showToast('Refleksi berhasil disimpan.');});
+  $('saveInvestigation').addEventListener('click',()=>{setField('evidenceText',$('evidenceText').value);setField('safeActionText',$('safeActionText').value);$('investigationStatus').textContent='Hasil investigasi tersimpan di browser ini. Untuk pembelajaran lebih mendalam, jelaskan bukti dan alasan Anda kepada fasilitator atau rekan.';showToast('Hasil investigasi disimpan.');});
+  $('saveIncidentPlan').addEventListener('click',()=>{setField('incidentType',$('incidentType').value);setField('incidentPlan',$('incidentPlan').value);$('incidentPlanStatus').textContent='Rencana respons tersimpan secara lokal.';showToast('Rencana respons disimpan.');});
+
+  function saveReflection(){['reflectLearn','reflectChange','reflectCommit','reflectAction'].forEach(id=>setField(id,$(id).value));const ids=['reflectLearn','reflectChange','reflectCommit'];const complete=ids.every(id=>$(id).value.trim().length>=10)&&$('reflectAction').value!=='';state.scores.reflection=complete?10:ids.reduce((sum,id,i)=>sum+($(id).value.trim().length>=10?[4,3,3][i]:0),0);state.scores.total=null;saveState();$('reflectionStatus').textContent=complete?'Refleksi lengkap. Anda memperoleh 10 dari 10 poin refleksi.':'Refleksi tersimpan. Isi ketiga jawaban (minimal 10 karakter per jawaban) dan pilih satu komitmen untuk meraih 10 poin.';renderBreakdown();showToast('Refleksi disimpan. Skor refleksi: '+state.scores.reflection+'/10.');}
+  $('saveReflection').addEventListener('click',saveReflection);
+  $('clearReflection').addEventListener('click',()=>{['reflectLearn','reflectChange','reflectCommit'].forEach(id=>$(id).value='');$('reflectAction').value='';['reflectLearn','reflectChange','reflectCommit','reflectAction'].forEach(id=>setField(id,''));state.scores.reflection=0;state.scores.total=null;saveState();$('reflectionStatus').textContent='Isian refleksi sudah dikosongkan.';renderBreakdown();});
+  function renderBreakdown(){const entries=[['Kuis pengetahuan','finalquiz',40],['Analisis kasus','lab',30],['Simulasi keputusan aman','simulation',20],['Refleksi dan komitmen','reflection',10]];const el=$('scoreBreakdown');if(!el)return;el.innerHTML=entries.map(([label,key,max])=>{const score=state.scores[key];return '<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0;font-size:13px"><span style="color:#536276">'+label+'</span><strong style="color:var(--navy)">'+(score===null||score===undefined?'Belum dinilai':score+' / '+max)+'</strong></div>';}).join('')+'<div style="display:flex;justify-content:space-between;gap:12px;padding:13px 0 3px;font-size:15px"><strong style="color:var(--navy)">Total</strong><strong style="color:var(--teal-dark)">'+entries.reduce((sum,e)=>sum+(Number(state.scores[e[1]])||0),0)+' / 100</strong></div>';}
+  $('calculateTotal').addEventListener('click',()=>{saveReflection();const score=(Number(state.scores.finalquiz)||0)+(Number(state.scores.lab)||0)+(Number(state.scores.simulation)||0)+(Number(state.scores.reflection)||0);state.scores.total=score;saveState();const el=$('totalResult');el.classList.add('show');let level=score>=80?'Kompeten':score>=60?'Perlu penguatan':'Perlu pendampingan';let action=score>=80?'Pertahankan kebiasaan verifikasi dan bantu orang sekitar belajar aman.':score>=60?'Tinjau bagian yang belum dikuasai, lalu ulangi kuis dan analisis kasus.':'Pelajari kembali materi inti, praktikkan langkah STOP–CHECK–VERIFY, lalu ulangi asesmen.';el.innerHTML='<div class="score-layout"><div class="score-ring">'+score+'<span style="font-size:10px">/100</span></div><div><div style="font-size:18px;font-weight:950">'+level+'</div><p>'+action+'</p></div></div><p style="margin-top:14px;font-size:11px">Skor dihitung dari jawaban yang dinilai dan refleksi yang tersimpan. Komponen yang belum dikerjakan bernilai 0.</p>';renderBreakdown();showToast('Skor akhir dihitung: '+score+'/100.');});
+  $('printSummary').addEventListener('click',()=>window.print());
+
+  const checklistItems=['Saya akan berhenti sebelum merespons pesan yang mendesak.','Saya tidak akan membagikan OTP, PIN, atau kata sandi.','Saya akan memverifikasi pesan melalui kanal resmi yang diakses sendiri.','Saya tahu bukti apa yang perlu disimpan jika terjadi insiden.','Saya mengetahui setidaknya satu kanal bantuan atau pelaporan resmi.'];
+  function renderFinalChecklist(){const el=$('finalChecklist');if(!el)return;el.innerHTML=checklistItems.map((x,i)=>'<label class="option" style="align-items:center"><input type="checkbox" data-check="'+i+'" '+(state.checklist.includes(i)?'checked':'')+'><span>'+escapeHTML(x)+'</span></label>').join('');el.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{const i=Number(input.dataset.check);if(input.checked&&!state.checklist.includes(i))state.checklist.push(i);if(!input.checked)state.checklist=state.checklist.filter(x=>x!==i);saveState();}));}
+  $('exportSummary').addEventListener('click',()=>{const lines=['SCAM READY — REFLEKSI PEMBELAJARAN','==================================','Skor kuis pengetahuan: '+(state.scores.finalquiz??'Belum dinilai')+'/40','Skor analisis kasus: '+(state.scores.lab??'Belum dinilai')+'/30','Skor simulasi: '+(state.scores.simulation??'Belum dinilai')+'/20','Skor refleksi: '+(state.scores.reflection??'Belum dinilai')+'/10','Total saat ini: '+((Number(state.scores.finalquiz)||0)+(Number(state.scores.lab)||0)+(Number(state.scores.simulation)||0)+(Number(state.scores.reflection)||0))+'/100','','Apa yang saya pelajari:',state.fields.reflectLearn||$('reflectLearn').value||'-','','Perubahan perilaku yang akan saya lakukan:',state.fields.reflectChange||$('reflectChange').value||'-','','Komitmen saya:',state.fields.reflectCommit||$('reflectCommit').value||'-','','Kebiasaan yang dipilih:',state.fields.reflectAction||$('reflectAction').value||'-','','Catatan: dokumen ini dibuat dari isian lokal Anda. Hindari membagikan data pribadi.'];const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='refleksi-scam-ready.txt';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);});
+
+  restoreFields();renderFinalChecklist();renderProgress();renderBreakdown();
+  if(state.scores.diagnostic!==null){const r=$('diagnosticResult');r.classList.add('show');r.innerHTML='<div style="font-weight:900">Diagnostik sebelumnya: '+state.scores.diagnostic+'/15</div><p>Anda dapat mengulang diagnostik kapan saja. Skor ini tidak masuk skor akhir.</p>';}
+  if(state.scores.lab!==null)showStoredResult('labResult','Analisis kasus tersimpan: '+state.scores.lab+'/30. Gunakan tombol penilaian untuk melihat umpan balik per jawaban.');
+  if(state.scores.finalquiz!==null)showStoredResult('finalResult','Kuis akhir tersimpan: '+state.scores.finalquiz+'/40. Gunakan tombol penilaian untuk melihat umpan balik per jawaban.');
+  if(state.scores.simulation!==null)showStoredResult('simulationResult','Simulasi tersimpan: '+state.scores.simulation+'/20. Gunakan tombol penilaian untuk melihat umpan balik per jawaban.');
+  if(state.fields.investigationStatus)$('investigationStatus').textContent=state.fields.investigationStatus;
+  function showStoredResult(id,msg){const r=$(id);if(r){r.classList.add('show');r.innerHTML='<p>'+escapeHTML(msg)+'</p>';}}
+  // Store progress when participants complete a section; keep home as entry point.
+  window.addEventListener('beforeunload',saveState);
+})();
+</script>
+</body>
+</html>
